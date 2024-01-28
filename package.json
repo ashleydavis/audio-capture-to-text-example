@@ -1,29 +1,31 @@
 {
-    "name": "audio-capture-example",
+    "name": "audio-capture-to-text-example",
     "version": "1.0.0",
-    "description": "An example of recording audio in a web page.",
+    "description": "An example of recording audio in a web page and transcribing to text using Open AI.",
     "source": "src/index.html",
     "scripts": {
         "start": "parcel",
-        "s": "pnpm run start",
+        "s": "npm run start",
         "build": "parcel build",
-        "b": "pnpm run build",
+        "b": "npm run build",
         "clean": "rm -rf dist .parcel-cache tsconfig.tsbuildinfo",
         "compile": "tsc --incremental",
-        "c": "pnpm run compile"
+        "c": "npm run compile"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "@parcel/transformer-less": "^2.10.3",
+        "@types/node": "^20.11.8",
         "@types/react": "^18.2.45",
         "@types/react-dom": "^18.2.18",
+        "buffer": "^6.0.3",
         "live-server": "^1.2.2",
         "parcel": "^2.10.3",
         "typescript": "^5.3.3"
     },
     "dependencies": {
+        "openai": "^4.26.0",
         "process": "^0.11.10",
         "react": "^18.2.0",
         "react-dom": "^18.2.0"

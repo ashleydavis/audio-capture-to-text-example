@@ -1,10 +1,22 @@
 import React, { useEffect, useRef, useState } from "react";
+import OpenAI, { toFile } from "openai";
+
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+if (!OPENAI_API_KEY) {
+    throw new Error("Missing OPENAI_API_KEY environment variable.");
+}
+
+const openai = new OpenAI({
+    apiKey: OPENAI_API_KEY,
+    dangerouslyAllowBrowser: true, // Wouldn't normally do it this way in production, this is just an example.
+});
 
 export function App() {
 
     const [recording, setRecording] = useState(false);
     const mediaRecorderRef = useRef<MediaRecorder | undefined>(undefined);
     const audioChunksRef = useRef<Blob[] | undefined>(undefined);
+    const [transcribedText, setTranscribedText] = useState("<transcribed audio will go here>");
 
     useEffect(() => {
 
@@ -24,17 +36,25 @@ export function App() {
 
                 mediaRecorder.onstop = () => {
                     // Combine and process audioChunks as needed.
-                    const audioBlob = new Blob(audioChunks, { type: audioChunks[0].type })
+                    const audioBlob = new Blob(audioChunks, { type: audioChunks[0].type });
 
-                    // Download the audio file (thanks ChatGPT).
-                    const url = URL.createObjectURL(audioBlob);
-                    const downloadLink = document.createElement('a');
-                    downloadLink.href = url;
-                    downloadLink.download = 'audio-capture.webm'; // Set the desired filename for the downloaded file.
-                    downloadLink.style.display = 'none'; // Hide the download link initially.
-                    document.body.appendChild(downloadLink); // Append the link to the document.
-                    downloadLink.click(); // Simulate a click on the link to trigger the download.
-                    document.body.removeChild(downloadLink); // Remove the link from the document after the download.
+                    // Convert audio to a Open AI "file" object.
+                    return toFile(audioBlob, "audio.webm")
+                        .then(file => {
+                            // Transcribe the audio file.
+                            openai.audio.transcriptions.create({
+                                    model: "whisper-1",
+                                    response_format: "json",
+                                    file,
+                                })
+                                .then(response => {
+                                    setTranscribedText(response.text);
+                                })
+                                .catch(error => {
+                                    console.error(`Failed to transcribe audio.`);
+                                    console.error(error);
+                                });
+                        });
                 };
 
                 mediaRecorderRef.current = mediaRecorder;
@@ -88,6 +108,8 @@ export function App() {
                     Stop recording
                 </button>
             }
+
+            <p>{transcribedText}</p>
         </div>
     );
 }

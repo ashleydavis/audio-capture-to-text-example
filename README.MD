@@ -1,8 +1,8 @@
-# audio-capture-example
+# audio-capture-to-text-example
 
-An example of recording audio in a web page.
+An example of recording audio in a web page and transcribing to text using Open AI.
 
-This is a first step in my learning how to control a chatbot with your voice.
+This is a next step in my learning how to control a chatbot with your voice.
 
 If you like this project, please star this repo and [support my work](https://www.codecapers.com.au/about#support-my-work)
 
@@ -10,24 +10,25 @@ If you like this project, please star this repo and [support my work](https://ww
 
 You need [Node.js](https://nodejs.org/en/) installed to use this code.
 
-Uses pnpm because it's faster than npm.
+You need an Open AI account and your API key.
 
-First install pnpm:
+Install depdnencies:
 
 ```bash
-npm install -g pnpm
+cd audio-capture-to-text-example
+npm install
 ```
 
-Then clone this repo then install dependenices:
+Set your Open AI open key before start the web server:
 
 ```bash
-pnpm install
+set OPENAI_API_KEY=<your-api-key>
 ```
 
 ## Serve the web page with live reload
 
 ```bash
-pnpm start
+npm start
 ```
 
 Open a browser and navigate to [http://localhost:1234/](http://localhost:1234/).
@@ -35,22 +36,15 @@ Open a browser and navigate to [http://localhost:1234/](http://localhost:1234/).
 ## Build the static web page
 
 ```bash
-pnpm run build
+npm run build
 ```
 
 The static web page is output to the `dist` subdirectory.
-
-You can test it using `live-server`:
-
-```bash
-cd dist
-npx live-server
-```
 
 ## Build the TypeScript code
 
 Do this if you want to check for compile errors.
 
 ```bash
-pnpm run compile
+npm run compile
 ```
